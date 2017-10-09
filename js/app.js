@@ -126,10 +126,7 @@ function increaseCounter() {
 	} else if (counter===40) {
 		$('#second-star').css('color','#fefefe');
 		score=1;
-	} else if (counter===50) {
-		$('#first-star').css('color','#fefefe');
-		score=0;
-	} else if (counter>70) {
+	} else if (counter>60) {
 		showLosingMessage();
 	}
 }
@@ -140,6 +137,7 @@ function checkMatch() {
 			keepOpenOnMatch($('.card:has(.'+openCards[0]+')'));
 			matchedCards.push(openCards[0]);
 			if (matchedCards.length===8) { //the game is won
+			 	clearInterval(timerVar);
 			 	showWinnigMessage();	
 			  }
 		} else { //hide the uncovered cards
@@ -155,12 +153,14 @@ $('.card').click( function(event) {
 		resetTimer();
 		isFirstClick = false;
 	}
-	if (openCards.length<=1) { //react only if there is one or no cards open
-		let card = $(event.target);
-		showSymbol(card);
-		addToOpen(card);
-		increaseCounter();
-		setTimeout(checkMatch,800);//give some time to the user to see both cards
+	let card = $(event.target); 
+	if (!card.hasClass('match') && !card.hasClass('show')) { //only if the class is not open already
+		if (openCards.length<=1) { //react only if there is one or no cards open
+			showSymbol(card);
+			addToOpen(card);
+			increaseCounter();
+			setTimeout(checkMatch,800);//give some time to the user to see both cards
+		}
 	}
 });
 
