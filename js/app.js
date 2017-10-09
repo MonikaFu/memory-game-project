@@ -2,12 +2,14 @@
  * Create a list that holds all of your cards
  */
 
- let cardsBottoms = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-anchor', 'fa-leaf', 'fa-bicycle', 'fa-diamond', 'fa-bomb', 'fa-leaf', 'fa-bomb', 'fa-bolt', 'fa-bicycle', 'fa-paper-plane-o', 'fa-cube'];
+let cardsBottoms = ['fa-diamond', 'fa-paper-plane-o', 'fa-anchor', 'fa-bolt', 'fa-cube', 'fa-anchor', 'fa-leaf', 'fa-bicycle', 'fa-diamond', 'fa-bomb', 'fa-leaf', 'fa-bomb', 'fa-bolt', 'fa-bicycle', 'fa-paper-plane-o', 'fa-cube'];
 
 let openCards = []; //list storing currently uncovered cards
 let matchedCards = []; //list storing the figures that were matched already
 let score = 3; //current score
 let counter = 0;
+let isFirstClick = true;
+let currentBottoms = [];
 /*
  * Display the cards on the page
  *   - shuffle the list of cards using the provided "shuffle" method below
@@ -49,11 +51,11 @@ function resetTimer() {
  	matchedCards = [];
  	score = 3;
  	counter = 0;
+ 	isFirstClick = true;
  	$('.moves').text(0);
  	$('.fa-star').css('color','#000');
-
- 	resetTimer();
- };
+ 	clearInterval(timerVar);
+ }
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -86,12 +88,12 @@ function showSymbol(card) {
 }
 
 function hideSymbol(card) {
-	card.removeClass('open show')
+	card.removeClass('open show');
 }
 
 function keepOpenOnMatch(card) {
 	card.addClass('match');
-	card.removeClass('open show')
+	card.removeClass('open show');
 }
 
 function showWinnigMessage() {
@@ -149,6 +151,10 @@ function checkMatch() {
 }
 
 $('.card').click( function(event) {
+	if (isFirstClick) {
+		resetTimer();
+		isFirstClick = false;
+	}
 	if (openCards.length<=1) { //react only if there is one or no cards open
 		let card = $(event.target);
 		showSymbol(card);
@@ -156,7 +162,7 @@ $('.card').click( function(event) {
 		increaseCounter();
 		setTimeout(checkMatch,800);//give some time to the user to see both cards
 	}
-})
+});
 
 $('.restart').click(newGame);
 
@@ -165,12 +171,12 @@ $(document).ready(newGame);
 // When the user clicks on <span> (x), close the modal
 $('.close').click(function() {
     $('.modal').css('display', 'none');
-})
+});
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     $('.modal').css('display', 'none');
-}
+};
 
 // When play again button is clicked, play a new game
 $('.play').click(newGame);
@@ -179,6 +185,6 @@ $('.play').click(newGame);
 $('.no-play').click(function() {
     $('.modal').css('display', 'none');
     clearInterval(timerVar);
-})
+});
 
 
