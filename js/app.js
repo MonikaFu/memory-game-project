@@ -15,6 +15,24 @@ let counter = 0;
  *   - add each card's HTML to the page
  */
 
+ //Timer for the game 
+var timerVar = setInterval(countTimer, 1000);
+var totalSeconds = 0;
+function countTimer() {
+   ++totalSeconds;
+   var hour = Math.floor(totalSeconds /3600);
+   var minute = Math.floor((totalSeconds - hour*3600)/60);
+   var seconds = totalSeconds - (hour*3600 + minute*60);
+
+   document.getElementById("timer").innerHTML = hour + ":" + minute + ":" + seconds;
+}
+
+function resetTimer() {
+	clearInterval(timerVar);
+	totalSeconds = 0;
+	timerVar = setInterval(countTimer, 1000);
+}
+
  function newGame() {
  	let cards = $('.card');
  	cards.removeClass('match open show'); //hide all images
@@ -33,6 +51,8 @@ let counter = 0;
  	counter = 0;
  	$('.moves').text(0);
  	$('.fa-star').css('color','#000');
+
+ 	resetTimer();
  };
 
 // Shuffle function from http://stackoverflow.com/a/2450976
@@ -76,7 +96,10 @@ function keepOpenOnMatch(card) {
 
 function showWinnigMessage() {
 	let modalWin = $('#winningModal');
-	$('#winningText').text('You\'ve won with score '+score+'. Awsome job!');
+	let hours = Math.floor(totalSeconds /3600);
+    let minutes = Math.floor((totalSeconds - hours*3600)/60);
+    let seconds = totalSeconds - (hours*3600 + minutes*60);
+	$('#winningText').text('You\'ve won with score '+score+' and it took you '+hours+' hour(s) '+minutes+' minute(s) and '+seconds+' second(s). Awsome job!');
 	modalWin.css('display','block');
 }
 
@@ -96,13 +119,13 @@ function increaseCounter() {
 	$('.moves').text(counter);
 	// decrease the score depending on the amount of moves that were already made
 	if (counter===30) { 
-		$('#third-star').css('color','#fff');
+		$('#third-star').css('color','#fefefe');
 		score=2;
 	} else if (counter===40) {
-		$('#second-star').css('color','#fff');
+		$('#second-star').css('color','#fefefe');
 		score=1;
 	} else if (counter===50) {
-		$('#first-star').css('color','#fff');
+		$('#first-star').css('color','#fefefe');
 		score=0;
 	} else if (counter>70) {
 		showLosingMessage();
@@ -122,6 +145,11 @@ function checkMatch() {
 			hideSymbol($('.card:has(.'+openCards[1]+')'));
 		}
 		openCards=[];
+	} else if (openCards.length>2) { //hide the cards if there are two many open
+		for (i=0;i<openCards.length-1;i++) {
+			hideSymbol($('.card:has(.'+openCards[0]+')'));
+			openCards.shift(); 
+		}
 	}
 }
 
@@ -130,7 +158,7 @@ $('.card').click( function(event) {
 	showSymbol(card);
 	addToOpen(card);
 	increaseCounter();
-	setTimeout(checkMatch,700);//give some time to the user to see both cards
+	setTimeout(checkMatch,800);//give some time to the user to see both cards
 })
 
 $('.restart').click(newGame);
@@ -138,12 +166,22 @@ $('.restart').click(newGame);
 $(document).ready(newGame);
 
 // When the user clicks on <span> (x), close the modal
-$('.close').onclick = function() {
+$('.close').click(function() {
     $('.modal').css('display', 'none');
-}
+})
 
 // When the user clicks anywhere outside of the modal, close it
 window.onclick = function(event) {
     $('.modal').css('display', 'none');
 }
+
+// When play again button is clicked, play a new game
+$('.play').click(newGame);
+
+// When player doesn't want to play anymore
+$('.no-play').click(function() {
+    $('.modal').css('display', 'none');
+    clearInterval(timerVar);
+})
+
 
