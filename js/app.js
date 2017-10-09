@@ -145,20 +145,17 @@ function checkMatch() {
 			hideSymbol($('.card:has(.'+openCards[1]+')'));
 		}
 		openCards=[];
-	} else if (openCards.length>2) { //hide the cards if there are two many open
-		for (i=0;i<openCards.length-1;i++) {
-			hideSymbol($('.card:has(.'+openCards[0]+')'));
-			openCards.shift(); 
-		}
-	}
+	} 
 }
 
 $('.card').click( function(event) {
-	let card = $(event.target);
-	showSymbol(card);
-	addToOpen(card);
-	increaseCounter();
-	setTimeout(checkMatch,800);//give some time to the user to see both cards
+	if (openCards.length<=1) { //react only if there is one or no cards open
+		let card = $(event.target);
+		showSymbol(card);
+		addToOpen(card);
+		increaseCounter();
+		setTimeout(checkMatch,800);//give some time to the user to see both cards
+	}
 })
 
 $('.restart').click(newGame);
