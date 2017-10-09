@@ -6,6 +6,7 @@ This is a basic Memory Game project as you would know it from your childhood. Th
 
 * [Instructions](#instructions)
 * [Project contents](#project-contents)
+* [Bugs](#Bugs)
 * [Contributing](#contributing)
 * [License](#license)
 
@@ -23,6 +24,10 @@ The project is structured as followed:
 * `/img` folder contains the background image
 
 The structure of the folders should be preserved for the website to work properly.
+
+## Bugs
+
+The mechanics of the game is not perfect when the user clicks on cards very fast. Sometimes the recognition of which cards are matched and which are not can get mixed up. Best not to click on cards too fast and wait for the game to change the color of the cards if the match is found.
 
 ## Contributing
 
